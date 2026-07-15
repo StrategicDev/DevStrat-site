@@ -1,0 +1,955 @@
+<title>Devin Strategic — The Positioning Sprint</title>
+<style>
+  :root {
+    --bg: #090909;
+    --panel: #0f0f0f;
+    --panel-line: #1c1c1c;
+    --gold: #d9b44a;
+    --gold-soft: #b8963a;
+    --white: #ffffff;
+    --gray: #8e8e8e;
+    --gray-dim: #6a6a6a;
+    --grid-line: #151515;
+
+    --serif: Georgia, 'Times New Roman', 'Playfair Display', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+    --measure: 1140px;
+    --pad: clamp(1.25rem, 5vw, 2.5rem);
+  }
+
+  /* Committed dark identity — hold the look regardless of viewer theme. */
+  :root, :root[data-theme="light"], :root[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--sans);
+    font-size: 1.1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--serif);
+    font-weight: 700;
+    color: var(--white);
+    margin: 0;
+    line-height: 1.1;
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+
+  p { margin: 0; }
+  a { color: inherit; text-decoration: none; }
+
+  ::selection { background: rgba(217, 180, 74, 0.28); color: #fff; }
+
+  :focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding-inline: var(--pad);
+  }
+
+  .gold { color: var(--gold); }
+  .gray { color: var(--gray); }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.6;
+  }
+
+  /* ---------- Nav ---------- */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(9, 9, 9, 0.82);
+    backdrop-filter: saturate(140%) blur(12px);
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    height: 74px;
+  }
+  .brand {
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .nav-links {
+    display: flex;
+    gap: 2.1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.92rem;
+  }
+  .nav-links a {
+    color: var(--gray);
+    position: relative;
+    transition: color 0.2s ease;
+  }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.28s ease;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.72rem 1.35rem;
+    background: var(--gold);
+    color: #000;
+    border: 1px solid var(--gold);
+    cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+    white-space: nowrap;
+  }
+  .btn:hover {
+    background: #e4c463;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px -12px rgba(217, 180, 74, 0.55);
+  }
+  .btn .arrow { transition: transform 0.2s ease; }
+  .btn:hover .arrow { transform: translateX(3px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid var(--panel-line);
+  }
+  .btn-ghost:hover {
+    background: transparent;
+    border-color: var(--gray-dim);
+    box-shadow: none;
+  }
+
+  .link-down {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--gray);
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+  }
+  .link-down:hover { color: var(--white); }
+  .link-down .chev { transition: transform 0.2s ease; }
+  .link-down:hover .chev { transform: translateY(2px); }
+
+  .nav .btn { padding: 0.6rem 1.15rem; }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(4.5rem, 12vw, 9rem) clamp(3.5rem, 8vw, 6rem);
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 30% 30%, #000 0%, transparent 78%);
+    mask-image: radial-gradient(ellipse 80% 70% at 30% 30%, #000 0%, transparent 78%);
+    pointer-events: none;
+  }
+  .hero-glow {
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 55%;
+    height: 120%;
+    background: radial-gradient(circle at center, rgba(217,180,74,0.10), transparent 62%);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; max-width: 880px; }
+  .hero .tagline {
+    font-size: 0.74rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 1.8rem;
+  }
+  .hero .tagline b { color: var(--gold); font-weight: 600; }
+  .hero h1 {
+    font-size: clamp(2.6rem, 6.2vw, 4.5rem);
+    margin-bottom: 1.6rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold); }
+  .hero .lede {
+    color: var(--gray);
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    max-width: 60ch;
+    margin-bottom: 0.9rem;
+  }
+  .hero .lede + .lede { margin-bottom: 2.4rem; }
+  .hero-cta {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+  }
+  .hero .footer-tag {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-dim);
+    padding-top: 1.8rem;
+    border-top: 1px solid var(--panel-line);
+    display: inline-block;
+  }
+  .hero .footer-tag span { color: var(--gray); }
+
+  /* ---------- Section scaffold ---------- */
+  .section { padding-block: clamp(4.5rem, 9vw, 7.5rem); }
+  .section + .section { border-top: 1px solid var(--panel-line); }
+  .section-head { max-width: 760px; margin-bottom: 3.5rem; }
+  .section-head h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-top: 1.4rem;
+  }
+  .section-head .sub {
+    color: var(--gray);
+    margin-top: 1.2rem;
+    max-width: 62ch;
+  }
+
+  .prose p { color: var(--gray); max-width: 68ch; }
+  .prose p + p { margin-top: 1.3rem; }
+  .prose strong { color: var(--white); font-weight: 600; }
+
+  /* ---------- Pull quote ---------- */
+  .pullquote {
+    text-align: center;
+    max-width: 900px;
+    margin: 4rem auto 0;
+  }
+  .pullquote q {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 3vw, 2.3rem);
+    line-height: 1.25;
+    color: var(--white);
+    quotes: none;
+  }
+  .pullquote q b { color: var(--gold); font-weight: 700; }
+  .pullquote .attrib {
+    margin-top: 1.5rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+  }
+
+  /* ---------- Two-column process ---------- */
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
+  .phase {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    padding: 2.4rem;
+  }
+  .phase-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 1.4rem;
+    margin-bottom: 1.6rem;
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .phase-num {
+    font-family: var(--serif);
+    font-size: 2.4rem;
+    color: var(--gold);
+    line-height: 1;
+    font-weight: 700;
+  }
+  .phase-head h3 { font-size: 1.5rem; }
+  .phase-head .wk {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gray);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+  .checklist { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.15rem; }
+  .checklist li {
+    position: relative;
+    padding-left: 1.9rem;
+    color: var(--gray);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+  .checklist li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+  .checklist strong { color: var(--white); font-weight: 600; }
+
+  /* ---------- Outcome box ---------- */
+  .outcome {
+    margin-top: 2.5rem;
+    background: linear-gradient(180deg, #131313, #0e0e0e);
+    border: 1px solid var(--panel-line);
+    padding: clamp(2rem, 4vw, 3rem);
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .outcome h3 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+  .outcome .walk { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.95rem; }
+  .outcome .walk li {
+    padding-left: 1.7rem;
+    position: relative;
+    color: var(--gray);
+  }
+  .outcome .walk li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+  }
+  .invest-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 0.6rem;
+  }
+  .invest-figure {
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.9rem;
+  }
+  .invest-terms { color: var(--gray); font-size: 0.95rem; margin-bottom: 1.8rem; }
+  .invest-note { color: var(--gray-dim); font-size: 0.86rem; margin-top: 1rem; line-height: 1.5; }
+
+  /* ---------- Steps ---------- */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+  .step {
+    padding: 1.9rem;
+    border: 1px solid var(--panel-line);
+    background: var(--panel);
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  .step:hover { border-color: var(--gold-soft); transform: translateY(-3px); }
+  .step .num {
+    font-family: var(--serif);
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .step h3 { font-size: 1.15rem; line-height: 1.25; }
+  .step p { color: var(--gray); font-size: 0.95rem; }
+
+  /* ---------- Why me callout ---------- */
+  .callout {
+    margin-top: 3rem;
+    border-left: 2px solid var(--gold);
+    padding: 1.6rem 2rem;
+    background: var(--panel);
+  }
+  .callout q {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+    color: var(--white);
+    quotes: none;
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .callout p { color: var(--gray); font-size: 1rem; max-width: 66ch; }
+
+  /* ---------- Service cards ---------- */
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+  .card {
+    padding: 2.1rem;
+    border: 1px solid var(--panel-line);
+    background: var(--panel);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+  }
+  .card:hover { border-color: var(--gold-soft); transform: translateY(-3px); }
+  .tag {
+    align-self: flex-start;
+    font-size: 0.64rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid;
+  }
+  .tag.now { color: var(--gold); border-color: rgba(217,180,74,0.4); }
+  .tag.alumni { color: var(--gray); border-color: var(--panel-line); }
+  .card h3 { font-size: 1.3rem; }
+  .card p { color: var(--gray); font-size: 0.96rem; }
+
+  /* ---------- FAQ + contact ---------- */
+  .faq-contact {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2.5rem, 6vw, 5rem);
+    align-items: start;
+  }
+  .faq { display: grid; gap: 0; }
+  details.qa {
+    border-bottom: 1px solid var(--panel-line);
+  }
+  details.qa summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 1.4rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--white);
+    transition: color 0.2s ease;
+  }
+  details.qa summary:hover { color: var(--gold); }
+  details.qa summary::-webkit-details-marker { display: none; }
+  details.qa summary .plus {
+    flex: none;
+    width: 22px; height: 22px;
+    position: relative;
+  }
+  details.qa summary .plus::before,
+  details.qa summary .plus::after {
+    content: "";
+    position: absolute;
+    background: var(--gold);
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  details.qa summary .plus::before { top: 10px; left: 3px; width: 16px; height: 1.5px; }
+  details.qa summary .plus::after { left: 10px; top: 3px; width: 1.5px; height: 16px; }
+  details.qa[open] summary .plus::after { transform: rotate(90deg); opacity: 0; }
+  details.qa .answer {
+    padding: 0 0 1.5rem;
+    color: var(--gray);
+    font-size: 1rem;
+    max-width: 58ch;
+  }
+
+  form.contact {
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    padding: clamp(1.6rem, 4vw, 2.4rem);
+    display: grid;
+    gap: 1.2rem;
+  }
+  form.contact .field { display: grid; gap: 0.5rem; }
+  form.contact label {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray);
+  }
+  form.contact input,
+  form.contact textarea {
+    font-family: var(--sans);
+    font-size: 1rem;
+    color: var(--white);
+    background: #0a0a0a;
+    border: 1px solid var(--panel-line);
+    padding: 0.8rem 0.9rem;
+    transition: border-color 0.2s ease;
+  }
+  form.contact input:focus,
+  form.contact textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+  }
+  form.contact textarea { resize: vertical; min-height: 110px; }
+  form.contact .btn { justify-content: center; margin-top: 0.4rem; }
+  .form-note {
+    font-size: 0.8rem;
+    color: var(--gray-dim);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .form-done {
+    display: none;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(217,180,74,0.4);
+    color: var(--gold);
+    font-size: 0.95rem;
+  }
+  form.contact.sent .form-done { display: block; }
+
+  /* ---------- Footer ---------- */
+  .foot {
+    border-top: 1px solid var(--panel-line);
+    padding-block: 2.5rem;
+  }
+  .foot-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    color: var(--gray-dim);
+    font-size: 0.85rem;
+  }
+  .foot .brand { font-size: 1.1rem; }
+
+  /* ---------- Reveal animation ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+    * { scroll-behavior: auto !important; }
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 940px) {
+    .nav-links { display: none; }
+    .steps { grid-template-columns: repeat(2, 1fr); }
+    .cards { grid-template-columns: 1fr; }
+    .outcome { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 680px) {
+    .cols { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; }
+    .faq-contact { grid-template-columns: 1fr; }
+    .hero-cta { gap: 1rem; }
+  }
+
+  html { scroll-behavior: smooth; }
+</style>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand">Devin Strategic</a>
+    <nav aria-label="Primary">
+      <ul class="nav-links">
+        <li><a href="#problem">The Problem</a></li>
+        <li><a href="#sprint">The Sprint</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#why">Why Me</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </nav>
+    <a href="#contact" class="btn">Book the Sprint <span class="arrow">→</span></a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="wrap hero-inner">
+      <p class="tagline reveal">Positioning Sprint <b>·</b> B2B AI Companies <b>·</b> San Francisco</p>
+      <h1 class="reveal">The AI market doesn't have a product problem. It has a <em>trust</em> problem.</h1>
+      <p class="lede reveal">Every week, another hundred AI startups launch with the same claims, the same demos, the same "10x" promises. Buyers have stopped listening. The companies that win from here won't be the best products — they'll be the clearest points of view.</p>
+      <p class="lede reveal">I run a two-week Positioning Sprint that gives B2B AI companies what a crowded market can't ignore: a forged POV, a category narrative, and a 90-day plan to broadcast both.</p>
+      <div class="hero-cta reveal">
+        <a href="#contact" class="btn">Book the Sprint <span class="arrow">→</span></a>
+        <a href="#how" class="link-down">See how it works <span class="chev">↓</span></a>
+      </div>
+      <p class="footer-tag reveal">Fixed scope <span>·</span> Flat fee <span>·</span> Founder-led <span>·</span> No retainers</p>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="section" id="problem">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">The Problem</span>
+        <h2>Hype was a strategy. Past tense.</h2>
+      </div>
+      <div class="prose reveal">
+        <p>For two years, AI companies could raise, sell, and hire on capability claims alone. That window is closing. Buyers have been burned by demos that didn't survive contact with production. Procurement teams now assume exaggeration. <strong>"Powered by AI" went from differentiator to wallpaper in eighteen months.</strong></p>
+        <p>What cuts through now is the same thing that has always cut through in a low-trust market: a point of view worth arguing with. A claim about how the world works that your company is willing to stake its name on. Not a feature list — a position.</p>
+        <p>Most founders can't articulate theirs. Not because they don't have one — because they've never been forced to forge it. That's the work.</p>
+      </div>
+      <figure class="pullquote reveal">
+        <q>Forge your POV. <b>Broadcast your truth.</b> Build your army.</q>
+        <figcaption class="attrib">Authority GTM — Category Design With a Spine</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- OFFER -->
+  <section class="section" id="sprint">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">The Offer</span>
+        <h2>The Positioning Sprint</h2>
+        <p class="sub">Two weeks. One offer. Everything you need to stop competing on features and start converting on conviction.</p>
+      </div>
+
+      <div class="cols">
+        <article class="phase reveal">
+          <div class="phase-head">
+            <span class="phase-num">01</span>
+            <div>
+              <span class="wk">Week One</span>
+              <h3>Forge.</h3>
+            </div>
+          </div>
+          <ul class="checklist">
+            <li>Deep-dive working sessions with you and your leadership team</li>
+            <li>Market and buyer-language audit: <strong>what your category actually rewards</strong></li>
+            <li>Your POV, pressure-tested and written: the claim your company stands on</li>
+            <li>Category narrative: why you're not one of many, but the only logical choice</li>
+          </ul>
+        </article>
+
+        <article class="phase reveal">
+          <div class="phase-head">
+            <span class="phase-num">02</span>
+            <div>
+              <span class="wk">Week Two</span>
+              <h3>Arm.</h3>
+            </div>
+          </div>
+          <ul class="checklist">
+            <li>Messaging architecture: homepage, sales narrative, one-liner, elevator, objection responses</li>
+            <li>The <strong>90-day Broadcast Plan</strong>: exactly where and how your POV goes public</li>
+            <li>Founder talk-track: how you carry the story in sales calls, podcasts, and rooms that matter</li>
+            <li>Handoff session: your team leaves able to run it without me</li>
+          </ul>
+        </article>
+      </div>
+
+      <div class="outcome reveal">
+        <div>
+          <h3>What you walk away with</h3>
+          <ul class="walk">
+            <li>Positioning document your whole company executes against</li>
+            <li>Sales language that closes</li>
+            <li>90-day broadcast plan with dates on it</li>
+          </ul>
+        </div>
+        <div>
+          <p class="invest-label">Investment</p>
+          <p class="invest-figure">$9,500 <span style="font-size:1rem;color:var(--gray);">flat</span></p>
+          <p class="invest-terms">Half up front, half on delivery. Starts within two weeks of signing.</p>
+          <a href="#contact" class="btn">Book a 20-minute fit call <span class="arrow">→</span></a>
+          <p class="invest-note">If I don't think the sprint will move your pipeline, I'll tell you on the call.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">How It Works</span>
+        <h2>No ambiguity. No surprises.</h2>
+      </div>
+      <div class="steps">
+        <article class="step reveal">
+          <span class="num">01</span>
+          <h3>20-minute fit call.</h3>
+          <p>You tell me what's true. I tell you whether the sprint fixes it. No pitch theater.</p>
+        </article>
+        <article class="step reveal">
+          <span class="num">02</span>
+          <h3>Sprint scheduled.</h3>
+          <p>NDA signed, dates locked, pre-work sent. It's short — founders are busy.</p>
+        </article>
+        <article class="step reveal">
+          <span class="num">03</span>
+          <h3>Two weeks of work.</h3>
+          <p>Working sessions, drafts, pressure-testing. You'll see everything as it's built.</p>
+        </article>
+        <article class="step reveal">
+          <span class="num">04</span>
+          <h3>Delivery + handoff.</h3>
+          <p>The full positioning system, the 90-day plan, and a team that knows how to run it.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY ME -->
+  <section class="section" id="why">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Why Me</span>
+        <h2>You get me. That's the point.</h2>
+      </div>
+      <div class="prose reveal">
+        <p>No junior staffers inheriting your file after the partner sells the next client. No 100-page deck that jargons its way around a decision. <strong>One senior strategist, twenty years of high-stakes communication work, fully on your problem.</strong></p>
+        <p>My background isn't growth hacking — it's crisis management, reputation strategy, and twenty years of moving people who didn't want to be moved. I spent two decades in social work, community engagement, and public relations: rooms where the stakes were real, the audiences were hostile, and the message had to land the first time.</p>
+        <p>That's the muscle your positioning gets built with.</p>
+      </div>
+      <div class="callout reveal">
+        <q>"I've defended narratives under fire, not just launched them."</q>
+        <p>When your category gets contested — and if you're winning, it will be — you want the strategist who's worked the bad days, not just the launch days.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEYOND -->
+  <section class="section" id="beyond">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Beyond the Sprint</span>
+        <h2>The sprint is the front door.</h2>
+        <p class="sub">Some clients need more.</p>
+      </div>
+      <div class="cards">
+        <article class="card reveal">
+          <span class="tag now">Available Now</span>
+          <h3>Crisis &amp; Reputation Management</h3>
+          <p>Fast, sharp, and discreet. Real-time damage control, narrative recovery, and reputation repair when the stakes are highest.</p>
+        </article>
+        <article class="card reveal">
+          <span class="tag now">Available Now</span>
+          <h3>Executive Counsel</h3>
+          <p>Confidential, one-on-one strategic advice for leaders navigating complex decisions, media, or internal politics.</p>
+        </article>
+        <article class="card reveal">
+          <span class="tag alumni">Sprint Alumni Only</span>
+          <h3>Ongoing Authority Advisory</h3>
+          <p>For sprint alumni: monthly strategic counsel to keep the POV sharp as the market moves.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ + CONTACT -->
+  <section class="section" id="faq">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">FAQ &amp; Contact</span>
+        <h2>Straight answers, then let's talk.</h2>
+      </div>
+      <div class="faq-contact">
+        <div class="faq reveal">
+          <details class="qa">
+            <summary>Why a flat fee? <span class="plus" aria-hidden="true"></span></summary>
+            <p class="answer">Because retainers reward dragging work out, and hourly billing punishes speed. A flat fee aligns us on one thing: the outcome. You know the number before we start, and the scope doesn't move.</p>
+          </details>
+          <details class="qa">
+            <summary>We're pre-revenue. Is this for us? <span class="plus" aria-hidden="true"></span></summary>
+            <p class="answer">Sometimes. If you're still discovering the product, positioning is premature. If you have something that works and buyers who can't tell why it matters, that's exactly the problem the sprint fixes. The fit call sorts this out honestly.</p>
+          </details>
+          <details class="qa">
+            <summary>Do you use AI in your work? <span class="plus" aria-hidden="true"></span></summary>
+            <p class="answer">As a tool, where it helps — never as the strategist. The POV, the judgment, and the hard calls are mine and yours. You're paying for twenty years of pattern recognition, not a prompt.</p>
+          </details>
+          <details class="qa">
+            <summary>Is everything confidential? <span class="plus" aria-hidden="true"></span></summary>
+            <p class="answer">Yes. NDA before we begin, no exceptions. Your positioning, your internal debates, and your unreleased strategy stay between us. Discretion is a large part of what I've been paid for over two decades.</p>
+          </details>
+          <details class="qa">
+            <summary>What if we need something custom? <span class="plus" aria-hidden="true"></span></summary>
+            <p class="answer">Say so on the call. The sprint is the core offer, but crisis work, executive counsel, and ongoing advisory exist for a reason. If your situation doesn't fit the standard scope, we'll shape something that does.</p>
+          </details>
+        </div>
+
+        <form class="contact reveal" id="contactForm" novalidate>
+          <div class="field">
+            <label for="c-name">Name</label>
+            <input id="c-name" name="name" type="text" autocomplete="name" required />
+          </div>
+          <div class="field">
+            <label for="c-email">Email</label>
+            <input id="c-email" name="email" type="email" autocomplete="email" required />
+          </div>
+          <div class="field">
+            <label for="c-company">Company</label>
+            <input id="c-company" name="company" type="text" autocomplete="organization" />
+          </div>
+          <div class="field">
+            <label for="c-truth">What's true right now?</label>
+            <textarea id="c-truth" name="truth" required></textarea>
+          </div>
+          <button type="submit" class="btn">Send Securely <span class="arrow">→</span></button>
+          <p class="form-note">🔒 Confidential. Covered by NDA on request.</p>
+          <p class="form-done" role="status">Sent — flagged high-priority to devin@devinstrategic.com. I'll reply within one business day.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-inner">
+    <span class="brand gold">Devin Strategic</span>
+    <span>Positioning Sprint · B2B AI · San Francisco</span>
+    <span>© 2026 Devin Strategic. Founder-led. No retainers.</span>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  (function () {
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var els = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+
+  // Contact form — POST to the server endpoint for a true high-priority send.
+  // If the endpoint isn't reachable (static preview, or before the function is
+  // deployed), fall back to a mailto: compose so the form never dead-ends.
+  (function () {
+    var form = document.getElementById('contactForm');
+    if (!form) return;
+
+    var ENDPOINT = '/api/contact';
+    var RECIPIENT = 'devin@devinstrategic.com';
+    var btn = form.querySelector('button[type="submit"]');
+    var doneEl = form.querySelector('.form-done');
+
+    function readValues() {
+      return {
+        name: (document.getElementById('c-name').value || '').trim(),
+        email: (document.getElementById('c-email').value || '').trim(),
+        company: (document.getElementById('c-company').value || '').trim(),
+        truth: (document.getElementById('c-truth').value || '').trim()
+      };
+    }
+
+    function confirm(msg) {
+      form.classList.add('sent');
+      doneEl.textContent = msg;
+      btn.textContent = 'Sent';
+      btn.disabled = true;
+      doneEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function mailtoFallback(v) {
+      var subject = '[HIGH PRIORITY] Positioning Sprint inquiry — ' + v.name +
+                    (v.company ? ' (' + v.company + ')' : '');
+      var body = [
+        'Priority: HIGH', '',
+        'Name: ' + v.name,
+        'Email: ' + v.email,
+        'Company: ' + (v.company || '—'), '',
+        "What's true right now?", v.truth
+      ].join('\r\n');
+      window.location.href = 'mailto:' + RECIPIENT +
+        '?subject=' + encodeURIComponent(subject) +
+        '&body=' + encodeURIComponent(body);
+      btn.disabled = false;
+      btn.textContent = 'Send Securely';
+    }
+
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+
+      var v = readValues();
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(v)
+      }).then(function (r) {
+        if (r.ok) {
+          confirm("Sent — flagged high-priority to " + RECIPIENT + ". I'll reply within one business day.");
+        } else {
+          // Endpoint reachable but errored — hand off to the mail client.
+          mailtoFallback(v);
+        }
+      }).catch(function () {
+        // Endpoint unreachable (e.g. static preview) — hand off to the mail client.
+        mailtoFallback(v);
+      });
+    });
+  })();
+</script>
